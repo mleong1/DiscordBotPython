@@ -1,15 +1,19 @@
 import discord
 import asyncio
 import random
-import pickle
 import pyperclip
+import re
 
 #client is essentially our bot
 client = discord.Client();
-prefix = "cmd"
-
-#switch statement definitions
+prefix = "cmd";
+filterOn = True;
+kickWords = ['fuck', 'shit', 'bitch'];
+#TODO can use tinydb to hold number of swears for a ban
+#switch statement definitions NOTE: this is not currently used
 def helpMe(message):
+    print("got here")
+    print(message.channel)
     client.send_message(message.channel, "Here is a list of cmd commands:")
     
 switcher = {
@@ -24,15 +28,34 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    global filterOn
     if "mert" in message.content:
-        await client.send_message(message.channel, message.content.replace(word, "*Golden God*"))
+        await client.send_message(message.channel, message.content.replace("mert", "*Golden God*"))
+    if filterOn:
+        for curse in kickWords:
+            searchObj = re.search(curse, message.content, re.I)
+            if searchObj:
+                await client.delete_message(message)
+                await client.send_message(message.channel, "Profane message deleted")
+                break 
     if message.content.startswith(prefix):
         msg = message.content[len(prefix):]
-        print(msg)
+        #print(msg)
         msgList = msg.split()
         #python has no switch statements
-        print(msgList[0])
-        switcher[msgList[0]](message)
+        #print(msgList[0])
+        #using if elses for now
+        if(msgList[0].lower() == "helpme"):
+            await client.send_message(message.channel, "Here is a list of cmd commands:")
+        elif(msgList[0].lower() == "filteroff"):
+            await client.send_message(message.channel, "Filter off")
+            filterOn = False;
+        elif(msgList[0].lower() == "filteron"):
+            await client.send_message(message.channel, "Filter on")
+            filterOn = True;
+        else:
+            await client.send_message(message.channel, "Invalid command")
+            
         
         
 #can't have two on_messages
