@@ -65,6 +65,17 @@ async def on_message(message):
 async def ping(context):
     await client.send_message(context.message.channel, "pong")
 
+@client.command(pass_context=True)
+async def summon(context):
+    summoned_channel = context.message.author.voice_channel
+    #if the command user isn't in voice chat
+    if summoned_channel is None:
+        await client.send_message(context.message.channel, "You are not in a voice channel.")
+        return False
+    #else place the bot in the voice chat
+    await client.join_voice_channel(summoned_channel)
+        
+
 #can't have two on_messages
 
 client.run('NDEyNzI4NDg3NzMyOTY5NDcy.DWOe9Q.7W2-xUZxIbaVbIE0EeKEKYSLE5o')
