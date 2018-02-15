@@ -1,24 +1,28 @@
 import discord
+from discord.ext import commands
 import asyncio
 import random
 import pyperclip
 import re
 
+
 #client is essentially our bot
-client = discord.Client();
+#client = discord.Client();
+client = commands.Bot(command_prefix="!")
 prefix = "cmd";
 filterOn = True;
 kickWords = ['fuck', 'shit', 'bitch'];
 #TODO can use tinydb to hold number of swears for a ban
 #switch statement definitions NOTE: this is not currently used
-def helpMe(message):
-    print("got here")
-    print(message.channel)
-    client.send_message(message.channel, "Here is a list of cmd commands:")
-    
-switcher = {
-    "helpMe": helpMe
-    }
+##def helpMe(message):
+##    print("got here")
+##    print(message.channel)
+##    client.send_message(message.channel, "Here is a list of cmd commands:")
+##    
+##switcher = {
+##    "helpMe": helpMe
+##    }
+
 @client.event
 async def on_ready():
     print('Logged in as')
@@ -26,7 +30,7 @@ async def on_ready():
     print(client.user.id)
     print('------')
 
-@client.event
+@client.listen()
 async def on_message(message):
     global filterOn
     if "mert" in message.content:
@@ -56,8 +60,11 @@ async def on_message(message):
         else:
             await client.send_message(message.channel, "Invalid command")
             
-        
-        
+@client.command(pass_context=True)
+#need at least one param in a comman ctx which stands for context
+async def ping(context):
+    await client.send_message(context.message.channel, "pong")
+
 #can't have two on_messages
 
 client.run('NDEyNzI4NDg3NzMyOTY5NDcy.DWOe9Q.7W2-xUZxIbaVbIE0EeKEKYSLE5o')
