@@ -5,7 +5,8 @@ import random
 import pyperclip
 import re
 
-
+if not discord.opus.is_loaded():
+    discord.opus.load_opus('opus')
 #client is essentially our bot
 #client = discord.Client();
 client = commands.Bot(command_prefix="!")
@@ -87,6 +88,18 @@ async def disconnect(context):
         print(botVoice.is_connected())
         await botVoice.disconnect()
 
+@client.command(pass_context=True)
+async def play(context, url : str):
+    opts = {
+            'default_search': 'auto',
+            'quiet': True,
+            }
+    #going to need link checks and error handling
+    if client.is_voice_connected(context.message.server):
+        botVoice = client.voice_client_in(context.message.server)
+        player = await botVoice.create_ytdl_player(url, ytdl_options=opts)
+        player.start()
+        
 #can't have two on_messages
 
 client.run('NDEyNzI4NDg3NzMyOTY5NDcy.DWOe9Q.7W2-xUZxIbaVbIE0EeKEKYSLE5o')
