@@ -73,8 +73,19 @@ async def summon(context):
         await client.send_message(context.message.channel, "You are not in a voice channel.")
         return False
     #else place the bot in the voice chat
-    await client.join_voice_channel(summoned_channel)
-        
+    #this step needs checks if the bot is in another server's chat but we'll only be in one for this bot
+    voice = await client.join_voice_channel(summoned_channel)
+    #TODO remember the server.id that our bot is in and we can tell if in different channel based on server id
+    print(voice.user.name)
+
+@client.command(pass_context=True)
+async def disconnect(context):
+    #i think coroutine messages need await???
+    if client.is_voice_connected(context.message.server):
+        #this botVoice is what will make the youtube player or ffmpeg player
+        botVoice = client.voice_client_in(context.message.server)
+        print(botVoice.is_connected())
+        await botVoice.disconnect()
 
 #can't have two on_messages
 
