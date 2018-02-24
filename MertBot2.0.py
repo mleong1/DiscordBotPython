@@ -63,7 +63,7 @@ async def on_message(message):
             
 @client.command(pass_context=True)
 #need at least one param in a comman ctx which stands for context
-async def ping(context):
+async def bitcoinminer(context):
     await client.send_message(context.message.channel, "pong")
 
 @client.command(pass_context=True)
@@ -99,7 +99,13 @@ async def play(context, url : str):
         botVoice = client.voice_client_in(context.message.server)
         player = await botVoice.create_ytdl_player(url, ytdl_options=opts)
         player.start()
-        
-#can't have two on_messages
+
+@client.command(pass_context=True)
+async def soundemote(context):
+    if client.is_voice_connected(context.message.server):
+        botVoice = client.voice_client_in(context.message.server)
+        player = botVoice.create_ffmpeg_player('nocopysound.wav')
+        player.start()
+
 
 client.run('NDEyNzI4NDg3NzMyOTY5NDcy.DWOe9Q.7W2-xUZxIbaVbIE0EeKEKYSLE5o')
