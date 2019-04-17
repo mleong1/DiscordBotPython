@@ -36,9 +36,11 @@ class deck:
 
 class player:
     money = 100
-    hand = []
+    folded = False
+    
     def __init__(self, name):
         self.name = name
+        self.hand = []
 
     def bet(self, amount):
         if amount < self.money:
@@ -52,16 +54,63 @@ class player:
         self.money = 0
         return bigBet
 
+    def hasFolded(self):
+        self.folded = True
+
+    def __str__(self):
+        return self.name
+
 class TexasHoldEmGame:
     deck = deck()
     players = []
     
+    
     def __init__(self, numOfPlayers):
         #Sets up the deck and the players 
         self.deck.shuffle()
+        self.commonCards = []
         for num in range(numOfPlayers):
-            self.players.append(player(num))
+            self.players.append(player("Player " + str(num)))
 
     
-    def initialBet(self):
+    def placeInitialBet(self):
+        smallBlind = 0
+        bigBlind = 1
+        self.players[smallBlind].bet(5)
+        self.players[bigBlind].bet(10)
         
+        if smallBlind < len(self.players):
+            smallBlind += 1
+        else:
+            smallBlind = 0
+
+        if bigBlind < len(self.players):
+            bigBlind += 1
+        else:
+            bigBlind = 0
+
+    def doPlayerAction(self, player, action):
+        if action == "check":
+            #No bet
+            print("no bet")
+        elif action == "bet":
+            print("How much are we betting?")
+        elif action == "fold":
+            player.hasFolded()
+
+    def dealHandCards(self):
+        for num in range(2):
+            for player in self.players:
+                card = self.deck.dealCard()
+                player.hand.append(card)
+
+    def dealFlop(self):
+        self.deck.dealCard()
+        for num in range(3):
+            card = self.deck.dealCard()
+            self.commonCards.append(card)
+            
+        
+        
+    
+            
