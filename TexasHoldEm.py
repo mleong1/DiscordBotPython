@@ -15,14 +15,26 @@ class TexasHoldEmCard:
         self.isAvailable = False
         
     def __str__(self):
-        return self.rank + " of " + self.suit
+        if self.rank == 1:
+            return "Ace of " + self.suit
+        elif self.rank == 11:
+            return "Jack of " + self.suit
+        elif self.rank == 12:
+            return "Queen of " + self.suit
+        elif self.rank == 13:
+            return "King of " + self.suit
+        else:
+            return str(self.rank) + " of " + self.suit
+
+    def __lt__(self, other):
+        return self.rank < other.rank
     
 class deck:
     cards = []
     def __init__(self):
         for suit in ['Hearts', 'Clubs', 'Diamonds', 'Spades']:
-            for rank in ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10',
-                        'Jack', 'Queen', 'King']:
+            for rank in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                         11, 12, 13]:
                 self.cards.append(TexasHoldEmCard(rank, suit))
 
     def peek(self):
@@ -109,6 +121,30 @@ class TexasHoldEmGame:
         for num in range(3):
             card = self.deck.dealCard()
             self.commonCards.append(card)
+
+
+class evaluator:
+
+    def __init__(self, playerHand, flop):
+        self.rankCounter = [13]
+        self.suitCounter = [4]
+        self.wholeHand = []
+        for card in playerHand:
+            self.wholeHand.append(card)
+        for card in flop:
+            self.wholeHand.append(card)
+        self.wholeHand.sort()
+        
+    def isRoyalFlush(self):
+        for card in self.wholeHand:
+            print(card)
+        
+        
+
+    
+
+    
+        
             
         
         
